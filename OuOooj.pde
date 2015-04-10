@@ -3,7 +3,7 @@
 color bgColor = #FFA28B;
 
 // objects
-World world;
+Game game;
 
 
 
@@ -12,14 +12,14 @@ void setup() {
   frame.setResizable(true);
   
   colorMode(HSB, 255);
-  
-  world = new World(width, height);
+ 
+  game = new Game();
 }
 
 void draw() {
   background(bgColor);
  
-  world.draw(); 
+  game.update();
   
   // draw fps
   fill(0);

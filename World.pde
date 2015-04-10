@@ -11,6 +11,10 @@ interface WorldInterface {
 
 class World /*implements WorldInterface*/ {
   
+  public final float PIXPERM = 100f;
+  public final float GRAVITY = 1f;
+  public final float ELECTRIC = -1f;
+  
   public float noiseSize = 0.005;
   public float noiseHeight = 0.999;
   final int TERRAIN_PIXELS_HIGH = 20;
@@ -21,20 +25,28 @@ class World /*implements WorldInterface*/ {
   public final int SIZE;
   
   PImage graphics;
+  ArrayList<Player> players;
  
-  World(int w, int h) {
+  World(int w, int h, ArrayList<Player> players) {
+    this.players = players;
     heightmap = new float[w*h];
     WIDTH = w;
     HEIGHT = h;
     SIZE = w * h;
-    
-    
     
     graphics = createGraphics(w, h);
     
     test();
   }
  
+  float getHeightAt(PVector v) {
+    float r = noise(v.x, v.y, frameCount*0.1) * noiseHeight;
+    return r;
+  }
+ 
+  float getHeightAt(float x, float y) {
+    return noise(x, y, frameCount*0.1) * noiseHeight;
+  }
  
   void update() {
    
@@ -50,7 +62,7 @@ class World /*implements WorldInterface*/ {
       x *= noiseSize;
       y *= noiseSize;
       
-      float h = noise(x, y, frameCount*0.01);    
+      float h = getHeightAt(x, y);    
       h *= noiseHeight;  
       
       heightmap[i] = h;
@@ -59,16 +71,20 @@ class World /*implements WorldInterface*/ {
   
   void draw() {
     
-    //test();
+    test();
     
+
     graphics.loadPixels();
+   
     
     
     for (int i=0; i<SIZE; i++) {
+     
       
-      color c = color(heightmap[i]*255,200,255-heightmap[i]*255f);
+      color c = color(heightmap[i]*125,200,255-heightmap[i]*255f);
       //int h = (int) map(heightmap[i], 0, 1f, 0f, TERRAIN_PIXELS_HIGH);
       graphics.pixels[i] = c;
+    
       /*   
       for (int j=0; j<h; j++) {
          graphics.pixels[max(i - j*WIDTH, 0)] = c;
