@@ -14,7 +14,7 @@ class Game {
   void update() {
     
     long timeNow = System.currentTimeMillis();
-    dt = (timePrevious - timeNow)/1000f;
+    dt = (timeNow - timePrevious) / 1000f;
     timePrevious = timeNow;
     
     world.update();
