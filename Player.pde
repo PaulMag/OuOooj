@@ -27,7 +27,6 @@ class Player {
     void move() {
       velocity = PVector.add(velocity, PVector.mult(acceleration, game.dt));
       pos = PVector.add(pos, PVector.mult(velocity, game.dt));
-      pos = PVector.add(pos, PVector.mult(velocity, game.dt));
     }
     
     void draw() {

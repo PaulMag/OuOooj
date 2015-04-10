@@ -15,6 +15,8 @@ class World /*implements WorldInterface*/ {
   public final float GRAVITY = 1f;
   public final float ELECTRIC = -1f;
   
+  final float TERRAIN_CHANGE_SPEED = 0.01;
+  
   public float noiseSize = 0.005;
   public float noiseHeight = 0.999;
   final int TERRAIN_PIXELS_HIGH = 20;
@@ -40,12 +42,12 @@ class World /*implements WorldInterface*/ {
   }
  
   float getHeightAt(PVector v) {
-    float r = noise(v.x, v.y, frameCount*0.1) * noiseHeight;
+    float r = noise(v.x, v.y, frameCount*TERRAIN_CHANGE_SPEED) * noiseHeight;
     return r;
   }
  
   float getHeightAt(float x, float y) {
-    return noise(x, y, frameCount*0.1) * noiseHeight;
+    return noise(x, y, frameCount*TERRAIN_CHANGE_SPEED) * noiseHeight;
   }
  
   void update() {
