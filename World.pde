@@ -18,6 +18,7 @@ class World {
   final int SIZE;
   
   ArrayList<Player> players;
+  float[] buildMap;
   
   PGraphics graphics;
   PGraphics circleMask;
@@ -29,6 +30,7 @@ class World {
     SIZE = w*h;
     
     graphics = createGraphics(w, h*2);
+    buildMap = new float[WIDTH*HEIGHT];
     
     circleMask = createGraphics(w, h);
     circleMask.beginDraw();
@@ -58,6 +60,14 @@ class World {
 
   float getHeightAt(float x, float y) {
     return noise(x*TERRAIN_SIZE, y*TERRAIN_SIZE, frameCount*TERRAIN_CHANGE_SPEED);
+  }
+  
+  void build(float heightPerSec, PVector pos, float sigma) {
+    for (int x=int(pos.x-3*sigma); x<int(pos.x+3*sigma); x++) {
+      for (int y=int(pos.y-3*sigma); y<int(pos.y+3*sigma); y++) {
+        buildMap[y * WIDTH + x] += gaussian(x, y, pos.x, pos.y, sigma) * heightPerSec * game.dt;
+      }
+    }
   }
   
   void draw() {

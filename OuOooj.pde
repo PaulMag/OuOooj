@@ -31,4 +31,9 @@ void draw() {
   text(frameRate, 0, 12); 
 }
 
-
+public float gaussian(float x, float y, float x0, float y0, float sigma) {
+  return exp(- (pow(x - x0, 2) + pow(y - y0, 2)) / (2*sigma*sigma));
+}
+public float gaussian(PVector v, PVector v0, float sigma) {
+  return gaussian(v.x, v.y, v0.x, v0.y, sigma);
+}

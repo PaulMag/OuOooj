@@ -33,7 +33,7 @@ class Game {
       }
     }   
     for (Player p : players) {
-      p.move();
+      p.update();
     }
     
     

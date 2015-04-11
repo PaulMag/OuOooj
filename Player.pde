@@ -4,6 +4,8 @@ class Player {
   Game game;
 
   final float WALKSPEED = 5;
+  final float BUILDSPEED = 1;
+  final float BUILDSIZE = 1;
 
   PVector pos;
   PVector velocity = new PVector(0, 0);
@@ -12,6 +14,7 @@ class Player {
   boolean alive = true;
   byte moveX = 0;
   byte moveY = 0;
+  byte moveZ = 0;
 
   Player(float posx, float posy, Game game, World world) {
     this.game = game;
@@ -43,7 +46,14 @@ class Player {
     return PVector.mult(rAbs, world.ELECTRIC / PVector.dot(r, r));
   }
 
-  void move() {
+  void update() {
+    move();
+    if (moveZ != 0) {
+      world.build(BUILDSPEED * moveZ, pos, BUILDSIZE);
+    }
+  }
+
+  private void move() {
     velocity = PVector.add(velocity, PVector.mult(acceleration, game.dt));
     pos = PVector.add(pos, PVector.mult(velocity, game.dt));
   }
