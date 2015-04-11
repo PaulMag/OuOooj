@@ -23,6 +23,7 @@ class Player {
     float thetaY = atan(dhY / dd);
     acceleration.x = world.GRAVITY * sin(thetaX);
     acceleration.y = world.GRAVITY * sin(thetaY);
+    acceleration.sub(PVector.mult(velocity, world.AIR)); // drag force
   }
 
   PVector getAttraction(Player other) {
