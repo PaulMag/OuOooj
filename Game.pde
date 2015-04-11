@@ -21,6 +21,13 @@ class Game {
     world.update();
     for (Player p : players) {
       p.findAcceleration();
+    }
+    for (int i=0; i < players.size(); i++) {
+      for (int j=i+1; j < players.size(); j++) {
+        PVector a = players.get(i).getAttraction(players.get(j));
+        players.get(i).acceleration.add(a);
+        players.get(j).acceleration.sub(a);
+      }
     }   
     for (Player p : players) {
       p.move();

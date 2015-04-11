@@ -24,6 +24,13 @@ class Player {
         acceleration.y = world.GRAVITY * sin(thetaY);
     }
 
+    PVector getAttraction(Player other) {
+      PVector r = PVector.sub(other.pos, this.pos);
+      PVector rAbs = r.get();
+      rAbs.normalize();
+      return PVector.mult(rAbs, world.ELECTRIC / PVector.dot(r, r)); 
+    }
+
     void move() {
       velocity = PVector.add(velocity, PVector.mult(acceleration, game.dt));
       pos = PVector.add(pos, PVector.mult(velocity, game.dt));
