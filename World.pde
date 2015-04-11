@@ -2,14 +2,16 @@
 
 class World {
   
-  public final float PIXPERM = 100f;  // Pixels per "meter".
-  public final float GRAVITY = 3f;
-  public final float ELECTRIC = -0.03f;
-  public final float AIR = 0.1;
   
-  final float TERRAIN_CHANGE_SPEED = .005;
-  final float TERRAIN_SIZE = 0.02;
-  final int MAX_PIXELS_HIGH = 50;
+  
+  public final float PIXPERM = 100f;  // Pixels per "meter".
+  public final float GRAVITY = 15f;
+  public final float ELECTRIC = 0f; //-0.03f;
+  public final float AIR = 0.5;
+  
+  final float TERRAIN_CHANGE_SPEED = .0000;
+  final float TERRAIN_SIZE = 0.04;
+  final int MAX_PIXELS_HIGH = 30;
   
   final int WIDTH;
   final int HEIGHT;
@@ -74,6 +76,15 @@ class World {
   
   void draw() {
     
+    Player[] dp = new Player[HEIGHT];
+    
+    for (Player p : players) { 
+      int d = (int) p.pos.y;
+      if (d > 0 && d < HEIGHT) {
+        dp[d] = p;
+      }
+    }
+    
     float[] heightmap = new float[WIDTH*HEIGHT];
     float[] lightning = new float[WIDTH*HEIGHT];
     
@@ -89,6 +100,9 @@ class World {
       //a *= v.mag();
       lightning[i] = a;
     }
+    
+    int ox = width/2 - graphics.width/2;
+    int oy = height/2 - graphics.height/2;
      
     graphics.clear();
     graphics.loadPixels();
@@ -114,6 +128,16 @@ class World {
           //c = color(100, 100, lightning[i]*255);
           graphics.pixels[max(offset + i - j*graphics.width, 0)] = c;
         }
+        
+        if (dp[i/WIDTH] != null) {
+          Player p = dp[i/WIDTH];
+          float ph = getHeightAt(p.pos.x, p.pos.y)*MAX_PIXELS_HIGH;
+          graphics.updatePixels();
+          graphics.image(orb, p.pos.x, HEIGHT + p.pos.y - ph - 5);
+          graphics.loadPixels();
+        }
+        
+      
       } else {
         graphics.pixels[offset+i] = color(0,0,0,0);
       }  

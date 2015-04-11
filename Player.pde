@@ -69,9 +69,11 @@ class Player {
   }
 
   void draw() {
+    /*
     noStroke();
     fill(0);
     ellipse(pos.x, pos.y, 8, 8);
+    */
   }
 }
 

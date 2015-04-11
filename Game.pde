@@ -5,11 +5,13 @@ class Game {
   private long timePrevious = System.currentTimeMillis();
 
   ArrayList<Player> players = new ArrayList<Player>();
-  World world = new World(100, 100, players);  
+  World world = new World(120, 120, players);  
   
   Game() {
-    players.add(new Player(100, 100, this, world));
-    players.add(new Player(150, 150, this, world));
+    players.add(new Player(50, 54, this, world));
+    players.add(new Player(56, 55, this, world));
+    players.add(new Player(50, 52, this, world));
+    players.add(new Player(58, 55, this, world));
   }
  
   void update() {
