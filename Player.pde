@@ -7,8 +7,8 @@ class Player {
 
   final float RAD = 4;  // Size of the Player's ball.
   final float WALKSPEED = 5;
-  final float BUILDSPEED = 1;
-  final float BUILDSIZE = 1;
+  final float BUILDSPEED = 0.04;
+  final float BUILDSIZE = 10;
 
   PVector pos;
   PVector velocity = new PVector(0, 0);

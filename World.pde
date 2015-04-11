@@ -5,13 +5,13 @@ class World {
   
   
   public final float PIXPERM = 100f;  // Pixels per "meter".
-  public final float GRAVITY = 15f;
+  public final float GRAVITY = 0.5f;
   public final float ELECTRIC = 0f; //-0.03f;
   public final float AIR = 0.9;
   
-  final float TERRAIN_CHANGE_SPEED = .010;
-  final float TERRAIN_SIZE = 0.02;
-  final int MAX_PIXELS_HIGH = 60;
+  final float TERRAIN_CHANGE_SPEED = .005;
+  final float TERRAIN_SIZE = 0.03;
+  final int MAX_PIXELS_HIGH = 50;
   
   final int WIDTH;
   final int HEIGHT;
@@ -53,14 +53,35 @@ class World {
 
   } 
   
+  /*
   float getHeightAt(PVector v) {
     float r = noise(v.x*TERRAIN_SIZE, v.y*TERRAIN_SIZE, frameCount*TERRAIN_CHANGE_SPEED);
     return r;
   }
-
+  
   float getHeightAt(float x, float y) {
     return noise(x*TERRAIN_SIZE, y*TERRAIN_SIZE, frameCount*TERRAIN_CHANGE_SPEED);
   }
+  
+  */
+  
+  float getHeightAt(PVector v) {
+    try {
+      return noise(v.x*TERRAIN_SIZE, v.y*TERRAIN_SIZE, frameCount*TERRAIN_CHANGE_SPEED) + buildMap[(int) v.x + (int) v.y * WIDTH];
+    } catch (Exception e) {
+      return noise(v.x*TERRAIN_SIZE, v.y*TERRAIN_SIZE, frameCount*TERRAIN_CHANGE_SPEED); 
+    }
+  }
+  
+  float getHeightAt(float x, float y) {
+    try {
+      return noise(x*TERRAIN_SIZE, y*TERRAIN_SIZE, frameCount*TERRAIN_CHANGE_SPEED) + buildMap[(int) x + (int) y * WIDTH];
+    } catch (Exception e) {
+      return noise(x*TERRAIN_SIZE, y*TERRAIN_SIZE, frameCount*TERRAIN_CHANGE_SPEED); 
+    }
+  }
+
+  
   
   void build(float heightPerSec, PVector pos, float sigma) {
     for (int x=int(pos.x-3*sigma); x<int(pos.x+3*sigma); x++) {
@@ -92,6 +113,7 @@ class World {
       heightmap[i] = getHeightAt(i%WIDTH, i/WIDTH);
     }
     
+    /*
     for (int i=0; i<lightning.length-1-WIDTH; i++) {
       float x = heightmap[(i + SIZE + 1)%SIZE] - heightmap[(i + SIZE - 1)%SIZE];
       float y = heightmap[(i + SIZE + WIDTH)%SIZE] + heightmap[(i + SIZE - WIDTH)%SIZE];
@@ -100,6 +122,7 @@ class World {
       //a *= v.mag();
       lightning[i] = a;
     }
+    */
     
     int ox = width/2 - graphics.width/2;
     int oy = height/2 - graphics.height/2;
@@ -116,28 +139,32 @@ class World {
     for (int i=0; i<s/2; i++) {
       if (circleMask.pixels[i] == #FFFFFF) {
         
-        float h = heightmap[i] + buildMap[i];
+        float h = getHeightAt(i%WIDTH, i/WIDTH);
        
         int pixelsHigh = int(h*MAX_PIXELS_HIGH);
         
         c = color(100, 150-h*75, 50 + h*300f);
         graphics.pixels[max(offset + i, 0)] = c;
         
+        
+        boolean cut = false;
         if (circleMask.pixels[min(i+WIDTH, SIZE-1)] == #000000) {
-          c = color(0,0,0,0);
+          cut = true;
         }
    
         for (int j=0; j<pixelsHigh; j++) {
           //c = color(100, 100, lightning[i]*255);
-          graphics.pixels[max(offset + i - j*graphics.width, 0)] = c;
+          graphics.pixels[max(offset + i - j*graphics.width, 0)] = (cut) ? color(0,0,0,0) : color(100, 150-h*75, 50 + h*300f);
         }
+       
         
         if (dp[i/WIDTH] != null) {
           Player p = dp[i/WIDTH];
           float ph = getHeightAt(p.pos.x, p.pos.y)*MAX_PIXELS_HIGH;
           graphics.updatePixels();
+          graphics.imageMode(CENTER);
           graphics.tint(p.playerColor);
-          graphics.image(orb, p.pos.x, HEIGHT + p.pos.y - ph - 5);
+          graphics.image(orb, p.pos.x, HEIGHT + p.pos.y - ph - p.RAD + 1);
           graphics.noTint();
           graphics.loadPixels();
         }

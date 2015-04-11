@@ -5,7 +5,7 @@ class Game {
   private long timePrevious = System.currentTimeMillis();
 
   ArrayList<Player> players = new ArrayList<Player>();
-  World world = new World(120, 120, players);  
+  World world = new World(130, 130, players);  
   
   Game() {
     players.add(new Player(50, 54, this, world));
