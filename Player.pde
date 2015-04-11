@@ -49,6 +49,7 @@ class Player {
     acceleration.x = - world.GRAVITY * sin(thetaX);
     acceleration.y = - world.GRAVITY * sin(thetaY);
     
+    acceleration.add(getBumpBack());
     acceleration.add(thrust);
     acceleration.sub(PVector.mult(velocity, world.AIR)); // drag force
   }
@@ -63,13 +64,25 @@ class Player {
   void update() {
     move();
     if (moveZ != 0) {
-      world.build(BUILDSPEED * moveZ, pos, BUILDSIZE);
+      float buildSpeed = (world.MAX_BUILD_HEIGHT - world.getHeightAt(pos)) / 
+                         world.MAX_BUILD_HEIGHT * BUILDSPEED;
+      world.build(buildSpeed * moveZ, pos, BUILDSIZE);
     }
   }
 
   private void move() {
     velocity = PVector.add(velocity, PVector.mult(acceleration, game.dt));
     pos = PVector.add(pos, PVector.mult(velocity, game.dt));
+  }
+  
+  PVector getBumpBack() {
+    PVector r = PVector.sub(world.MIDDLE, pos);
+    if (r.mag() > world.WIDTH/2) {
+      return PVector.mult(r, 1.0);
+    }
+    else {
+      return new PVector(0, 0);
+    }
   }
   
   void die() {

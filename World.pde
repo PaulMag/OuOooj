@@ -13,12 +13,14 @@ class World {
   final float TERRAIN_SIZE = 0.4;
   final float TERRAIN_RES = 0.03;
   final int MAX_PIXELS_HIGH = 50;
+  final int MAX_BUILD_HEIGHT = 100;
   
   
   
   final int WIDTH;
   final int HEIGHT;
   final int SIZE;
+  final PVector MIDDLE;
   
   ArrayList<Player> players;
   float[] buildMap;
@@ -31,6 +33,7 @@ class World {
     WIDTH = w;
     HEIGHT = h;
     SIZE = w*h;
+    MIDDLE = new PVector(WIDTH/2, HEIGHT/2);
     
     graphics = createGraphics(w, h*2);
     buildMap = new float[WIDTH*HEIGHT];
@@ -53,7 +56,10 @@ class World {
       centerOfGravity.add(p.pos);
     }
     centerOfGravity.div(players.size());
-
+    
+    for (int i=0; i<buildMap.length; i++) {
+      buildMap[i] *= 0.9 * game.dt;
+    }
   } 
   
   /*
