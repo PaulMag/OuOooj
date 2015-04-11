@@ -2,6 +2,8 @@ class Player {
 
   World world;
   Game game;
+  
+  public color playerColor;
 
   final float RAD = 4;  // Size of the Player's ball.
   final float WALKSPEED = 5;
@@ -77,6 +79,7 @@ class Player {
       }
     }
   }
+ 
 
   void draw() {
     /*

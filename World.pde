@@ -7,11 +7,11 @@ class World {
   public final float PIXPERM = 100f;  // Pixels per "meter".
   public final float GRAVITY = -15f;
   public final float ELECTRIC = 0f; //-0.03f;
-  public final float AIR = 0.5;
+  public final float AIR = 0.9;
   
-  final float TERRAIN_CHANGE_SPEED = .0000;
-  final float TERRAIN_SIZE = 0.04;
-  final int MAX_PIXELS_HIGH = 30;
+  final float TERRAIN_CHANGE_SPEED = .010;
+  final float TERRAIN_SIZE = 0.02;
+  final int MAX_PIXELS_HIGH = 60;
   
   final int WIDTH;
   final int HEIGHT;
@@ -103,8 +103,11 @@ class World {
     
     int ox = width/2 - graphics.width/2;
     int oy = height/2 - graphics.height/2;
-     
+    
+    graphics.beginDraw();
     graphics.clear();
+    graphics.endDraw();
+    
     graphics.loadPixels();
     int s = graphics.width * graphics.height;
     int offset = s/2;
@@ -117,7 +120,7 @@ class World {
        
         int pixelsHigh = int(h*MAX_PIXELS_HIGH);
         
-        c = color(100, 70, heightmap[i]*255f);
+        c = color(100, 150-h*75, 50 + h*300f);
         graphics.pixels[max(offset + i, 0)] = c;
         
         if (circleMask.pixels[min(i+WIDTH, SIZE-1)] == #000000) {
@@ -133,9 +136,12 @@ class World {
           Player p = dp[i/WIDTH];
           float ph = getHeightAt(p.pos.x, p.pos.y)*MAX_PIXELS_HIGH;
           graphics.updatePixels();
+          graphics.tint(p.playerColor);
           graphics.image(orb, p.pos.x, HEIGHT + p.pos.y - ph - 5);
+          graphics.noTint();
           graphics.loadPixels();
         }
+        
         
       
       } else {
