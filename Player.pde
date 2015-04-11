@@ -3,9 +3,15 @@ class Player {
   World world;
   Game game;
 
+  final float WALKSPEED = 5;
+
   PVector pos;
   PVector velocity = new PVector(0, 0);
   PVector acceleration = new PVector(0, 0);
+  PVector thrust;
+  boolean alive = true;
+  byte moveX = 0;
+  byte moveY = 0;
 
   Player(float posx, float posy, Game game, World world) {
     this.game = game;
@@ -20,8 +26,14 @@ class Player {
     float dhY = world.getHeightAt(PVector.add(pos, new PVector(1, 0))) - world.getHeightAt(PVector.add(pos, new PVector(-1, 0)));
     float thetaX = atan(dhX / dd);
     float thetaY = atan(dhY / dd);
+    thrust = new PVector(moveX * WALKSPEED, moveY * WALKSPEED);
+    if (moveX != 0 && moveY != 0) {
+      thrust.mult(0.70710678118654746);
+    }
+    acceleration.add(thrust);
     acceleration.x = world.GRAVITY * sin(thetaX);
     acceleration.y = world.GRAVITY * sin(thetaY);
+    acceleration.sub(PVector.mult(velocity, world.AIR)); // drag force
   }
 
   PVector getAttraction(Player other) {
@@ -34,6 +46,16 @@ class Player {
   void move() {
     velocity = PVector.add(velocity, PVector.mult(acceleration, game.dt));
     pos = PVector.add(pos, PVector.mult(velocity, game.dt));
+  }
+  
+  void die() {
+    alive = false;
+    for (int i=0; i<world.players.size(); i++) {
+      if (this == world.players.get(i)) {
+        world.players.remove(i);
+        break;
+      }
+    }
   }
 
   void draw() {
