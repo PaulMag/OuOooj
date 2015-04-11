@@ -6,7 +6,7 @@ class Player {
   public color playerColor;
 
   final float RAD = 4;  // Size of the Player's ball.
-  final float WALKSPEED = 5;
+  final float WALKSPEED = 80;
   final float BUILDSPEED = 0.04;
   final float BUILDSIZE = 10;
 
@@ -15,9 +15,9 @@ class Player {
   PVector acceleration = new PVector(0, 0);
   PVector thrust;
   boolean alive = true;
-  byte moveX = 0;
-  byte moveY = 0;
-  byte moveZ = 0;
+  int moveX = 0;
+  int moveY = 0;
+  int moveZ = 0;
 
   Player(float posx, float posy, Game game, World world) {
     this.game = game;
@@ -45,10 +45,12 @@ class Player {
     if (moveX != 0 && moveY != 0) {
       thrust.mult(0.70710678118654746);
     }
+
+    acceleration.x = - world.GRAVITY * sin(thetaX);
+    acceleration.y = - world.GRAVITY * sin(thetaY);
+    
     acceleration.add(thrust);
-    acceleration.x = world.GRAVITY * sin(thetaX);
-    acceleration.y = world.GRAVITY * sin(thetaY);
-    acceleration.add(PVector.mult(velocity, world.AIR)); // drag force
+    acceleration.sub(PVector.mult(velocity, world.AIR)); // drag force
   }
 
   PVector getAttraction(Player other) {

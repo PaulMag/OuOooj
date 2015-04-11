@@ -5,12 +5,12 @@ class World {
   
   
   public final float PIXPERM = 100f;  // Pixels per "meter".
-  public final float GRAVITY = 0.5f;
+  public final float GRAVITY = 500.0f;
   public final float ELECTRIC = 0f; //-0.03f;
   public final float AIR = 0.9;
   
   final float TERRAIN_CHANGE_SPEED = .005;
-  final float TERRAIN_SIZE = 0.03;
+  final float TERRAIN_SIZE = 0.025;
   final int MAX_PIXELS_HIGH = 50;
   
   final int WIDTH;
