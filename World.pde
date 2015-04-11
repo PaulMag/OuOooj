@@ -53,7 +53,10 @@ class World {
       centerOfGravity.add(p.pos);
     }
     centerOfGravity.div(players.size());
-
+    
+    for (int i=0; i<buildMap.length; i++) {
+      buildMap[i] *= 0.9 * game.dt;
+    }
   } 
   
   /*
