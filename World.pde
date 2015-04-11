@@ -28,6 +28,7 @@ class World /*implements WorldInterface*/ {
   
   PImage graphics;
   ArrayList<Player> players;
+  PVector centerOfGravity;
  
   World(int w, int h, ArrayList<Player> players) {
     this.players = players;
@@ -51,7 +52,11 @@ class World /*implements WorldInterface*/ {
   }
  
   void update() {
-   
+    centerOfGravity = new PVector(0, 0);
+    for (Player p : players) {
+      centerOfGravity.add(p.pos);
+    }
+    centerOfGravity.div(players.size());
   } 
   
   void test() {
@@ -75,10 +80,7 @@ class World /*implements WorldInterface*/ {
     
     test();
     
-
     graphics.loadPixels();
-   
-    
     
     for (int i=0; i<SIZE; i++) {
      
@@ -98,6 +100,11 @@ class World /*implements WorldInterface*/ {
     
     imageMode(CENTER);
     image(graphics, width/2, height/2); 
+
+    // Draw center of gravity:
+    noStroke();
+    fill(0);
+    rect(centerOfGravity.x, centerOfGravity.y, 5, 5);
   }
   
 
