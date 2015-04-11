@@ -10,6 +10,8 @@ Game game;
 void setup() {
   size(480, 480);
   frame.setResizable(true);
+  noSmooth();
+  imageMode(CENTER);
   
   colorMode(HSB, 255);
  

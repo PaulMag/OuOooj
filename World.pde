@@ -1,111 +1,114 @@
 
 
-interface WorldInterface {
-  
-  public float getHeightAt(PVector v);
-  public final float PIXPERM = 2f;
-  
-}
-
-
-
-class World /*implements WorldInterface*/ {
+class World {
   
   public final float PIXPERM = 100f;
   public final float GRAVITY = 0.1f;
   public final float ELECTRIC = -0.1f;
   
-  final float TERRAIN_CHANGE_SPEED = 0.01;
+  final float TERRAIN_CHANGE_SPEED = .005;
+  final float TERRAIN_SIZE = 0.02;
+  final int MAX_PIXELS_HIGH = 50;
   
-  public float noiseSize = 0.005;
-  public float noiseHeight = 0.999;
-  final int TERRAIN_PIXELS_HIGH = 20;
+  final int WIDTH;
+  final int HEIGHT;
+  final int SIZE;
   
-  private final float[] heightmap;
-  public final int WIDTH;
-  public final int HEIGHT;
-  public final int SIZE;
-  
-  PImage graphics;
   ArrayList<Player> players;
-  PVector centerOfGravity;
- 
-  World(int w, int h, ArrayList<Player> players) {
-    this.players = players;
-    heightmap = new float[w*h];
+  
+  PGraphics graphics;
+  PGraphics circleMask;
+  
+  World(int w, int h, ArrayList<Player> p) {
+    players = p;
     WIDTH = w;
     HEIGHT = h;
-    SIZE = w * h;
+    SIZE = w*h;
     
-    graphics = createGraphics(w, h);
+    graphics = createGraphics(w, h*2);
     
-    test();
+    circleMask = createGraphics(w, h);
+    circleMask.beginDraw();
+    circleMask.noSmooth();
+    circleMask.background(0);
+    circleMask.noStroke();
+    circleMask.fill(255);
+    circleMask.ellipse(w/2, h/2, w, h);
+    circleMask.endDraw();
+    circleMask.loadPixels();  
   }
- 
-  float getHeightAt(PVector v) {
-    float r = noise(v.x, v.y, frameCount*TERRAIN_CHANGE_SPEED) * noiseHeight;
-    return r;
-  }
- 
-  float getHeightAt(float x, float y) {
-    return noise(x, y, frameCount*TERRAIN_CHANGE_SPEED) * noiseHeight;
-  }
- 
+  
   void update() {
-    centerOfGravity = new PVector(0, 0);
+
+    PVector centerOfGravity = new PVector(0, 0);
     for (Player p : players) {
       centerOfGravity.add(p.pos);
     }
     centerOfGravity.div(players.size());
+
   } 
   
-  void test() {
+  float getHeightAt(PVector v) {
+    float r = noise(v.x*TERRAIN_SIZE, v.y*TERRAIN_SIZE, frameCount*TERRAIN_CHANGE_SPEED);
+    return r;
+  }
 
-    for (int i=0; i<heightmap.length; i++) { 
-      
-      float x = i % WIDTH;
-      float y = i / WIDTH;
-      
-      x *= noiseSize;
-      y *= noiseSize;
-      
-      float h = getHeightAt(x, y);    
-      h *= noiseHeight;  
-      
-      heightmap[i] = h;
-    }
+  float getHeightAt(float x, float y) {
+    return noise(x*TERRAIN_SIZE, y*TERRAIN_SIZE, frameCount*TERRAIN_CHANGE_SPEED);
   }
   
   void draw() {
     
-    test();
+    float[] heightmap = new float[WIDTH*HEIGHT];
+    float[] lightning = new float[WIDTH*HEIGHT];
     
-    graphics.loadPixels();
-    
-    for (int i=0; i<SIZE; i++) {
-     
-      
-      color c = color(heightmap[i]*125,200,255-heightmap[i]*255f);
-      //int h = (int) map(heightmap[i], 0, 1f, 0f, TERRAIN_PIXELS_HIGH);
-      graphics.pixels[i] = c;
-    
-      /*   
-      for (int j=0; j<h; j++) {
-         graphics.pixels[max(i - j*WIDTH, 0)] = c;
-      }
-      */
+    for (int i=0; i<heightmap.length; i++) {
+      heightmap[i] = getHeightAt(i%WIDTH, i/WIDTH);
     }
+    
+    for (int i=0; i<lightning.length-1-WIDTH; i++) {
+      float x = heightmap[(i + SIZE + 1)%SIZE] - heightmap[(i + SIZE - 1)%SIZE];
+      float y = heightmap[(i + SIZE + WIDTH)%SIZE] + heightmap[(i + SIZE - WIDTH)%SIZE];
+      PVector v = new PVector(x, y);
+      float a = map(v.heading(), -PI, PI, 0f, 1f);
+      //a *= v.mag();
+      lightning[i] = a;
+    }
+     
+    graphics.clear();
+    graphics.loadPixels();
+    int s = graphics.width * graphics.height;
+    int offset = s/2;
+    color c;
+    
+    for (int i=0; i<s/2; i++) {
+      if (circleMask.pixels[i] == #FFFFFF) {
+        
+        float h = heightmap[i];
+       
+        int pixelsHigh = int(h*MAX_PIXELS_HIGH);
+        
+        c = color(100, 70, heightmap[i]*255f);
+        graphics.pixels[max(offset + i, 0)] = c;
+        
+        if (circleMask.pixels[min(i+WIDTH, SIZE-1)] == #000000) {
+          c = color(0,0,0,0);
+        }
    
+        for (int j=0; j<pixelsHigh; j++) {
+          //c = color(100, 100, lightning[i]*255);
+          graphics.pixels[max(offset + i - j*graphics.width, 0)] = c;
+        }
+      } else {
+        graphics.pixels[offset+i] = color(0,0,0,0);
+      }  
+    }
+    
     graphics.updatePixels();
     
-    imageMode(CENTER);
-    image(graphics, width/2, height/2); 
-
-    // Draw center of gravity:
-    noStroke();
-    fill(0);
-    rect(centerOfGravity.x, centerOfGravity.y, 5, 5);
+    image(graphics, width/2, height/2 - graphics.height/2, graphics.width*2, graphics.height*2);
   }
-  
-
 }
+
+
+    

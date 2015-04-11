@@ -5,7 +5,7 @@ class Game {
   private long timePrevious = System.currentTimeMillis();
 
   ArrayList<Player> players = new ArrayList<Player>();
-  World world = new World(400, 400, players);  
+  World world = new World(100, 100, players);  
   
   Game() {
     players.add(new Player(100, 100, this, world));
@@ -19,6 +19,7 @@ class Game {
     timePrevious = timeNow;
     
     world.update();
+    
     for (Player p : players) {
       p.findAcceleration();
     }
