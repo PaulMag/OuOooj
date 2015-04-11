@@ -4,7 +4,7 @@ color bgColor = #FFA28B;
 
 // objects
 Game game;
-
+PImage orb;
 
 
 void setup() {
@@ -15,12 +15,15 @@ void setup() {
   
   colorMode(HSB, 255);
  
+  orb = loadImage("ball.png");
+  
   game = new Game();
 }
 
 void draw() {
   background(bgColor);
  
+  
   game.update();
   
   // draw fps
