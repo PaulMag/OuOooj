@@ -11,9 +11,10 @@ interface WorldInterface {
 
 class World /*implements WorldInterface*/ {
   
-  public final float PIXPERM = 100f;
-  public final float GRAVITY = 0.1f;
-  public final float ELECTRIC = -0.1f;
+  public final float PIXPERM = 100f;  // Pixels per "meter".
+  public final float GRAVITY = 3f;
+  public final float ELECTRIC = -0.03f;
+  public final float AIR = 0.1;
   
   final float TERRAIN_CHANGE_SPEED = 0.01;
   
