@@ -62,8 +62,12 @@ class World {
   
   void build(float heightPerSec, PVector pos, float sigma) {
     for (int x=int(pos.x-3*sigma); x<int(pos.x+3*sigma); x++) {
-      for (int y=int(pos.y-3*sigma); y<int(pos.y+3*sigma); y++) {
-        buildMap[y * WIDTH + x] += gaussian(x, y, pos.x, pos.y, sigma) * heightPerSec * game.dt;
+      if (x >= 0 && x < WIDTH) {
+        for (int y=int(pos.y-3*sigma); y<int(pos.y+3*sigma); y++) {
+          if (y >= 0 && y < HEIGHT) {
+            buildMap[y * WIDTH + x] += gaussian(x, y, pos.x, pos.y, sigma) * heightPerSec * game.dt;
+          }
+        }
       }
     }
   }
@@ -95,7 +99,7 @@ class World {
     for (int i=0; i<s/2; i++) {
       if (circleMask.pixels[i] == #FFFFFF) {
         
-        float h = heightmap[i];
+        float h = heightmap[i] + buildMap[i];
        
         int pixelsHigh = int(h*MAX_PIXELS_HIGH);
         
