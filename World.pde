@@ -12,6 +12,7 @@ class World {
   final float TERRAIN_CHANGE_SPEED = .005;
   final float TERRAIN_SIZE = 0.025;
   final int MAX_PIXELS_HIGH = 50;
+  final int MAX_BUILD_HEIGHT = 100;
   
   final int WIDTH;
   final int HEIGHT;

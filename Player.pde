@@ -64,7 +64,9 @@ class Player {
   void update() {
     move();
     if (moveZ != 0) {
-      world.build(BUILDSPEED * moveZ, pos, BUILDSIZE);
+      float buildSpeed = (world.MAX_BUILD_HEIGHT - world.getHeightAt(pos)) / 
+                         world.MAX_BUILD_HEIGHT * BUILDSPEED;
+      world.build(buildSpeed * moveZ, pos, BUILDSIZE);
     }
   }
 
