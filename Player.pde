@@ -6,6 +6,7 @@ class Player {
   PVector pos;
   PVector velocity = new PVector(0, 0);
   PVector acceleration = new PVector(0, 0);
+  boolean alive = true;
 
   Player(float posx, float posy, Game game, World world) {
     this.game = game;
@@ -34,6 +35,16 @@ class Player {
   void move() {
     velocity = PVector.add(velocity, PVector.mult(acceleration, game.dt));
     pos = PVector.add(pos, PVector.mult(velocity, game.dt));
+  }
+  
+  void die() {
+    alive = false;
+    for (int i=0; i<world.players.size(); i++) {
+      if (this == world.players.get(i)) {
+        world.players.remove(i);
+        break;
+      }
+    }
   }
 
   void draw() {
