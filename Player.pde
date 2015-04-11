@@ -3,6 +3,7 @@ class Player {
   World world;
   Game game;
 
+  final float RAD = 4;  // Size of the Player's ball.
   final float WALKSPEED = 5;
   final float BUILDSPEED = 1;
   final float BUILDSIZE = 1;
@@ -23,12 +24,21 @@ class Player {
   }
 
   void findAcceleration() {
-    float dd = 2f / world.PIXPERM;
 
-    float dhX = world.getHeightAt(PVector.add(pos, new PVector(0, 1))) - world.getHeightAt(PVector.add(pos, new PVector(0, -1)));
-    float dhY = world.getHeightAt(PVector.add(pos, new PVector(1, 0))) - world.getHeightAt(PVector.add(pos, new PVector(-1, 0)));
-    float thetaX = atan(dhX / dd);
-    float thetaY = atan(dhY / dd);
+    float hX1 = 0;
+    float hX2 = 0;
+    float hY1 = 0;
+    float hY2 = 0;
+    for (int i=1; i<=RAD; i++) {
+      hX1 += world.getHeightAt(PVector.add(pos, new PVector(-i, 0)));
+      hX2 += world.getHeightAt(PVector.add(pos, new PVector(+i, 0)));
+      hY1 += world.getHeightAt(PVector.add(pos, new PVector(0, -i)));
+      hY2 += world.getHeightAt(PVector.add(pos, new PVector(0, +i)));
+    }
+    float dhX = hX2 - hX1;
+    float dhY = hY2 - hY1;
+    float thetaX = atan(dhX / RAD);
+    float thetaY = atan(dhY / RAD);
     thrust = new PVector(moveX * WALKSPEED, moveY * WALKSPEED);
     if (moveX != 0 && moveY != 0) {
       thrust.mult(0.70710678118654746);

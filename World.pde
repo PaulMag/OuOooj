@@ -5,7 +5,7 @@ class World {
   
   
   public final float PIXPERM = 100f;  // Pixels per "meter".
-  public final float GRAVITY = 15f;
+  public final float GRAVITY = -15f;
   public final float ELECTRIC = 0f; //-0.03f;
   public final float AIR = 0.5;
   
