@@ -2,6 +2,8 @@ class Player {
 
   World world;
   Game game;
+  
+  public color playerColor;
 
   final float WALKSPEED = 5;
   final float BUILDSPEED = 1;
@@ -67,6 +69,7 @@ class Player {
       }
     }
   }
+ 
 
   void draw() {
     /*
