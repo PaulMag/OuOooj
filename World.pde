@@ -16,6 +16,7 @@ class World {
   final int WIDTH;
   final int HEIGHT;
   final int SIZE;
+  final PVector MIDDLE;
   
   ArrayList<Player> players;
   float[] buildMap;
@@ -28,6 +29,7 @@ class World {
     WIDTH = w;
     HEIGHT = h;
     SIZE = w*h;
+    MIDDLE = new PVector(WIDTH/2, HEIGHT/2);
     
     graphics = createGraphics(w, h*2);
     buildMap = new float[WIDTH*HEIGHT];
