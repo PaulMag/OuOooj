@@ -8,21 +8,49 @@ class Game {
   World world = new World(130, 130, players);  
   
   Game() {
-    players.add(new Player(50, 54, this, world));
-    players.add(new Player(56, 55, this, world));
-    /*
-    players.add(new Player(50, 52, this, world));
-    players.add(new Player(58, 55, this, world));
-    */
-    
+    for (int i=0; i<1; i++) {
+      players.add(new Player(this, world));
+    }
+    //players.add(new Player(50, 54, this, world));
+    //players.add(new Player(56, 55, this, world));
+    //players.add(new Player(50, 52, this, world));
+    //players.add(new Player(58, 55, this, world));
+
+
     players.get(0).playerColor = #FAE56A;    
-    players.get(1).playerColor = #D84F6A;
-    
-    /*
-    players.get(2).playerColor = #B6FAAC;
-    players.get(3).playerColor = #FAACF0;
-    */
+    //players.get(1).playerColor = #D84F6A;
+ 
+    //players.get(2).playerColor = #B6FAAC;
+    //players.get(3).playerColor = #FAACF0;
+
   }
+  
+  
+  final int MENU = 0;
+  final int GAME = 1;
+  
+  int state = MENU;
+  
+  void loop() {
+    
+    switch (state) {
+      case MENU:
+     
+        break;
+        
+      case GAME:
+      
+        break;
+       
+      default:
+        
+        break; 
+    }
+    
+    update();
+  }
+  
+  
  
   void update() {
     
@@ -52,5 +80,7 @@ class Game {
     for (Player p : players) {
       p.draw();
     }
+    
+    
   }
 }

@@ -1,3 +1,7 @@
+
+
+
+
 class Player {
 
   World world;
@@ -7,8 +11,10 @@ class Player {
 
   final float RAD = 4;  // Size of the Player's ball.
   final float WALKSPEED = 80;
-  final float BUILDSPEED = 0.2;
-  final float BUILDSIZE = 10;
+  final float BUILDSPEED = 1.2;
+  final float BUILDSIZE = 4;//10;
+  
+  final float BUMP_BACK = 10f;
 
   PVector pos;
   PVector velocity = new PVector(0, 0);
@@ -19,10 +25,12 @@ class Player {
   int moveY = 0;
   int moveZ = 0;
 
-  Player(float posx, float posy, Game game, World world) {
+  Player(Game game, World world) {
     this.game = game;
     this.world = world;
-    this.pos = new PVector(posx, posy);
+    PVector rot = new PVector(world.WIDTH/2 + random(WIDTH*0.15, WIDTH*0.22), 0);
+    rot.rotate(random(TAU));
+    pos = PVector.add(new PVector(world.WIDTH/2, world.HEIGHT/2), rot);
   }
 
   void findAcceleration() {
@@ -64,8 +72,8 @@ class Player {
   void update() {
     move();
     if (moveZ != 0) {
-      float buildSpeed = (world.MAX_BUILD_HEIGHT - world.getHeightAt(pos)) / 
-                         world.MAX_BUILD_HEIGHT * BUILDSPEED;
+      //float buildSpeed = (world.MAX_BUILD_HEIGHT - world.getHeightAt(pos)) / world.MAX_BUILD_HEIGHT * BUILDSPEED;
+      float buildSpeed = 1f;
       world.build(buildSpeed * moveZ, pos, BUILDSIZE);
     }
   }
@@ -78,7 +86,7 @@ class Player {
   PVector getBumpBack() {
     PVector r = PVector.sub(world.MIDDLE, pos);
     if (r.mag() > world.WIDTH/2) {
-      return PVector.mult(r, 1.0);
+      return PVector.mult(r, BUMP_BACK);
     }
     else {
       return new PVector(0, 0);
